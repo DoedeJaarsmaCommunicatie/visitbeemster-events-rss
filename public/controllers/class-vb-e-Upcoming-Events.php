@@ -8,7 +8,7 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
         $this->namespace = 'vb/v1';
         $this->rest_base = 'events';
     }
-    
+
     public function register_routes() {
         register_rest_route(
             $this->namespace,
@@ -24,7 +24,7 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
             ]
         );
     }
-    
+
     /**
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -33,7 +33,7 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
     public function get_upcoming_items_permission_check($request) {
         return true;
     }
-    
+
     /**
      * Retrieves all upcoming events (for the coming month)
      *
@@ -44,14 +44,14 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
         $response = [
             'type'  => $request->get_param('type'),
         ];
-        
+
         if ($response['type'] === 'json') {
             return $this->prepare_items_json_response($request);
         }
-    
+
         return $this->prepare_items_xml_response($request);
     }
-    
+
     /**
      * Retrieves the post type's schema, conforming to JSON Schema.
      *
@@ -66,10 +66,10 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
             'type'       => 'object',
             'properties' => []
         ];
-        
+
         return $this->add_additional_fields_schema( $schema );
     }
-    
+
     public function get_collection_params() {
         return [
             'type'  => $this->get_context_param(
@@ -80,7 +80,7 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
             )
         ];
     }
-    
+
     /**
      * @param WP_REST_Request $request
      *
@@ -101,33 +101,33 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
                 ],
                 'published' => $event->post_date,
             ];
-            
+
             if (function_exists('get_field')) {
                 try {
                     $date = new Carbon((string) get_field('start_datum', $event->ID));
                 } catch (Exception $e) {
                     new WP_Error( $e->getCode(), $e->getMessage() );
                 }
-                
+
                 $data [$event->ID] ['start_date'] = $date->isoFormat('DD-MM-YYYY');
                 $data [$event->ID] ['auteur'] = $date->isoFormat('DD-MM-YYYY');
             }
         }
-        
+
         return rest_ensure_response($data);
     }
-    
-    
-    
+
+
+
     /**
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
     protected function prepare_items_xml_response($request) {
-        $pubDate = Carbon::now()->day(25)->toRssString();
+        $pubDate = Carbon::now()->day(20)->toRssString();
         $events = $this->get_upcoming_events_array();
-        
+
         header('Content-Type: application/xml');
         print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<rss version=\"2.0\"
         xmlns:content=\"http://purl.org/rss/1.0/modules/content/\"
@@ -150,16 +150,16 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
             } catch (Exception $e) {
                 return new WP_Error( $e->getCode(), $e->getMessage() );
             }
-            
+
             $date = $date->isoFormat('DD-MM-YYYY');
-            
+
             include __DIR__ . '/../partials/vb-e-public-xml-event.php';
         }
         print "</channel>\r\n";
         print "</rss>\r\n";
         die;
     }
-    
+
     /**
      * @return array|WP_Post[]
      */
@@ -186,23 +186,23 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
             'meta_key'          => 'start_datum',
             'order'             => 'ASC'
         ];
-        
-        
+
+
         $q = new WP_Query($args);
-        
+
         if (!$q->have_posts()) {
             return [];
         }
-        
+
         return $q->posts;
     }
-    
+
     private static function lowerLimit(): string
     {
         $date = Carbon::now()->addMonth(1)->firstOfMonth();
         return $date->isoFormat('YYYYMMDD');
     }
-    
+
     private static function upperLimit(): string
     {
         $date = Carbon::now()->addMonth(2)->firstOfMonth();

@@ -15,8 +15,8 @@
  * @wordpress-plugin
  * Plugin Name:       Visit Eveentser
  * Plugin URI:        https://visitbeemster.nl/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Description:       Deze plugin voegt een RSS feed toe met upcoming events
+ * Version:           1.1.0
  * Author:            Doede Jaarsma communicatie
  * Author URI:        https://doedejaarsma.nl/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'VB_E_VERSION', '1.0.0' );
+define( 'VB_E_VERSION', '1.1.0' );
 
 /**
  * The code that runs during plugin activation.
@@ -75,7 +75,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-vb-e.php';
  */
 function run_vb_e() {
     require_once __DIR__ . '/vendor/autoload.php';
-    
+
 	$plugin = new Vb_E();
 	$plugin->run();
 
