@@ -8,8 +8,17 @@
 ?>
 <item>
     <ID><?=$event->ID?></ID>
-    <title><?=$event->post_title?></title>
-    <description><![CDATA[<?=get_the_excerpt($event->ID)?>]]></description>
+    <title>
+        <?=$event->post_title?>
+        <?php
+        if (get_field('herhalend_evenement', $event->ID)) {
+            _e('(wekelijks terugkerend evenement)', 'vb-e');
+        }
+        ?>
+    </title>
+    <description>
+        <![CDATA[<?=get_the_excerpt($event->ID)?>]]>
+    </description>
     <media:content url="<?=get_the_post_thumbnail_url($event->ID, 'medium')?>" medium="image" />
     <pubDate><?=$pubDate?></pubDate>
     <dc:creator><?=$date?></dc:creator>
