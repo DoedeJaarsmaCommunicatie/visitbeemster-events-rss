@@ -199,13 +199,13 @@ class Vbe_Upcoming_Events extends \WP_REST_Controller
 
     private static function lowerLimit(): string
     {
-        $date = Carbon::now()->addMonth(1)->firstOfMonth();
+        $date = Carbon::now()->addMonths(1)->firstOfMonth();
         return $date->isoFormat('YYYYMMDD');
     }
 
     private static function upperLimit(): string
     {
-        $date = Carbon::now()->addMonth(2)->firstOfMonth();
+        $date = Carbon::now()->addMonths(2)->firstOfMonth();
         return $date->isoFormat('YYYYMMDD');
     }
 }
